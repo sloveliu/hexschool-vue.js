@@ -40,7 +40,7 @@ const app = {
         ${item.price}
       </td>
       <td width="100">
-        <span class="">${item.enabled ? '啟用' : '停用'}</span>
+        <span class="badge ${item.is_enabled ? 'bg-primary' : 'bg-secondary'}">${item.is_enabled ? '啟用' : '停用'}</span>
       </td>
       <td width="120">
         <button type="button" class="btn btn-sm btn-outline-danger move deleteBtn" data-action="remove"
