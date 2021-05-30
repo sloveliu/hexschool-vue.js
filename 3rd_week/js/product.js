@@ -3,6 +3,7 @@ createApp({
   data() {
     return {
       products: [],
+      productNum: null,
       token: '',
       apiUrl: "https://vue3-course-api.hexschool.io",
       apiPath: "api_path",
@@ -67,6 +68,7 @@ createApp({
         .then(res => {
           if (res.data.success) {
             this.products = res.data.products;
+            this.productNum = this.products.length;
           } else alert(res.data.message);
         }).catch(err => console.log(err.toString()));
     },
