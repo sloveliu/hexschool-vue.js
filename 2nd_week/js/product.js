@@ -8,9 +8,8 @@ const app = {
     this.token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     if (!this.token) {
       window.location = './index.html';
-      return
+      return;
     }
-    axios.defaults.headers.common['Authorization'] = this.token;
     this.product.list = document.querySelector(".js-productList");
     this.product.count = document.querySelector("#productCount");
     this.logoutBtn = document.querySelector("#logout");
@@ -68,11 +67,11 @@ const app = {
       );
   },
   deleteProduct(id) {
+    axios.defaults.headers.common['Authorization'] = this.token;
     const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`;
     axios.delete(url)
       .then(res => {
         if (res.data.success) {
-          this.data = res.data.products;
           this.getProductList();
         }
         alert(res.data.message);
@@ -86,7 +85,7 @@ const app = {
         document.cookie = `hexToken=; expires=`;
         window.location = './index.html';
       }
-      alert(res.data.message)
+      alert(res.data.message);
     }
     ).catch(err => console.log(err.toString())
     );

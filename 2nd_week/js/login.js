@@ -24,9 +24,8 @@ const app = {
     const url = `${this.apiUrl}/admin/signin`;
     axios.post(url, this.userData).then(res => {
       if (res.data.success) {
-        this.userData.token = res.data.token;
-        this.userData.expired = res.data.expired;
-        document.cookie = `hexToken=${this.userData.token}; expires=${new Date(this.userData.expired)}`;
+        const { token, expired} = res.data;
+        document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
         window.location = './product.html';
       } else {
         alert(res.data.message);
