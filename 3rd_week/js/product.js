@@ -2,7 +2,7 @@ import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.
 createApp({
   data() {
     return {
-      products: [],
+      products: {},
       productNum: null,
       token: '',
       apiUrl: "https://vue3-course-api.hexschool.io",
@@ -20,7 +20,8 @@ createApp({
         is_enabled: 0,
         imagesUrl: []
       },
-      productModal: '',
+      productModal: null,
+      deleteModal: null,
       tempProduct: {
         imagesUrl: []
       },
@@ -39,7 +40,9 @@ createApp({
     this.getProductList();
 
     const productModal = document.querySelector("#productModal");
+    const deleteModal = document.querySelector("#deleteModal");
     this.productModal = new bootstrap.Modal(productModal);
+    this.deleteModal = new bootstrap.Modal(deleteModal);
   },
   methods: {
     // 共用 openModal 用 action 動作來判斷是否取產品資料
@@ -57,18 +60,21 @@ createApp({
           this.tempProduct = { ...item };
           this.productModal.show();
           break;
+        case 'del':
+          this.deleteModal.show();
+          this.tempProduct = { ...item };
+          break;
         default:
           alert('錯誤');
       }
     },
     getProductList() {
-      // const url = `${this.apiUrl}/api/${this.apiPath}/products?page=${page}`;
-      const url = `${this.apiUrl}/api/${this.apiPath}/products/all`;
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products/all`;
       axios.get(url)
         .then(res => {
           if (res.data.success) {
             this.products = res.data.products;
-            this.productNum = this.products.length;
+            this.productNum = Object.keys(this.products).length;
           } else alert(res.data.message);
         }).catch(err => console.log(err.toString()));
     },
@@ -105,11 +111,12 @@ createApp({
     removeImage(index) {
       this.tempProduct.imagesUrl.splice(index, 1);
     },
-    deleteProduct(id) {
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`;
+    deleteProduct() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
       axios.delete(url)
         .then(res => {
           if (res.data.success) {
+            this.deleteModal.hide();
             this.getProductList();
           }
           alert(res.data.message);

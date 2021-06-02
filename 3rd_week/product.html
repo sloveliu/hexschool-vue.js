@@ -112,12 +112,12 @@
         </div>
       </div>
     </div>
-    <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
-      aria-labelledby="delProductModalLabel" aria-hidden="true">
+    <div id="deleteModal" ref="deleteModal" class="modal fade" tabindex="-1"
+      aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content border-0">
           <div class="modal-header bg-danger text-white">
-            <h5 id="delProductModalLabel" class="modal-title">
+            <h5 id="deleteModalLabel" class="modal-title">
               <span>刪除產品</span>
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -130,7 +130,7 @@
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
               取消
             </button>
-            <button type="button" class="btn btn-danger">
+            <button type="button" class="btn btn-danger" @click="deleteProduct">
               確認刪除
             </button>
           </div>
@@ -171,7 +171,7 @@
           <td class="text-center" width="120">
             <button type="button" class="btn btn-sm btn-success move" @click="openModal('edit',item)">編輯
             </button>
-            <button type="button" class="btn btn-sm btn-danger move ms-2" @click="deleteProduct(item.id)">刪除
+            <button type="button" class="btn btn-sm btn-danger move ms-2" @click="openModal('del',item)">刪除
             </button>
           </td>
         </tr>`
