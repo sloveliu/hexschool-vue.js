@@ -7,7 +7,6 @@ createApp({
       token: '',
       apiUrl: "https://vue3-course-api.hexschool.io",
       apiPath: "api_path",
-      fileInput: null,
       tempProduct: {
         id: '',
         title: '',
@@ -22,13 +21,8 @@ createApp({
       },
       productModal: null,
       deleteModal: null,
-      tempProduct: {
-        imagesUrl: []
-      },
       isNew: true
     };
-  },
-  created() {
   },
   mounted() {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -61,8 +55,8 @@ createApp({
           this.productModal.show();
           break;
         case 'del':
-          this.deleteModal.show();
           this.tempProduct = { ...item };
+          this.deleteModal.show();
           break;
         default:
           alert('錯誤');
