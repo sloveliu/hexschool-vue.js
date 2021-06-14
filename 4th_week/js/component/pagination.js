@@ -5,7 +5,7 @@ export default {
         <li class="page-item" :class="{'disabled': !pages.has_pre}">
           <a class="page-link" href="#" @click.prevent="changePage(pages.current_page-1)">Previous</a>
         </li>
-        <li v-for="page in pages.total_pages" :key="page" class="page-item">
+        <li class="page-item" v-for="page in pages.total_pages" :key="page" :class="{'disabled' : page === pages.current_page}">
           <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
         </li>
         <li class="page-item" :class="{'disabled': !pages.has_next}">

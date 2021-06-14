@@ -1,11 +1,9 @@
-import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 import * as common from './component/index.js';
 
-createApp({
+Vue.createApp({
   data() {
     return {
       products: {},
-      productsCount: 0,
       token: '',
       tempProduct: {
         id: '',
@@ -23,6 +21,7 @@ createApp({
       pagination: {}
     };
   },
+  // 區域註冊
   components: {
     pagination: common.pagination,
     updateModal: common.updateModal,
@@ -73,7 +72,6 @@ createApp({
             console.log(this.pagination)
 
             this.products = res.data.products;
-            this.productsCount = Object.keys(this.products).length;
           } else alert(res.data.message);
         }).catch(err => console.log(err.toString()));
     },

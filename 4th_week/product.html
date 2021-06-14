@@ -24,7 +24,8 @@
     </div>
 
     <!-- ref="" 拿到子組件屬性、方法  -->
-    <update-modal :temp-product="tempProduct" :is-new="isNew" ref="updateModal" @get-product-list="getProductList"></update-modal>
+    <update-modal :temp-product="tempProduct" :is-new="isNew" ref="updateModal" @get-product-list="getProductList">
+    </update-modal>
     <delete-modal :temp-product="tempProduct" ref="deleteModal" @get-product-list="getProductList"></delete-modal>
 
     <table class="table mt-4">
@@ -75,6 +76,7 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js'
     integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw=='
     crossorigin='anonymous'></script>
+  <script src="https://unpkg.com/vue@next"></script>
   <script src="./config.js"></script>
   <script src="./js/product.js" type="module"></script>
 
