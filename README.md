@@ -5,3 +5,5 @@
 [第三週作業 - Vue.js 起步走](https://sloveliu.github.io/hexschool-vue.js/3rd_week/)
 
 [第四週作業 - 元件化](https://sloveliu.github.io/hexschool-vue.js/4th_week/)
+
+[第五週作業 - Vue JS 進階方法](https://sloveliu.github.io/hexschool-vue.js/5th_week/)
