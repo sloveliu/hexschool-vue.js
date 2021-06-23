@@ -17,7 +17,8 @@ createApp({
         description: '',
         content: '',
         is_enabled: 0,
-        imagesUrl: []
+        imagesUrl: [],
+        imageUrl: '',
       },
       productModal: null,
       deleteModal: null,
@@ -79,6 +80,7 @@ createApp({
         url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
         method = 'put';
       }
+      this.tempProduct.imageUrl = this.tempProduct.imagesUrl[0] || ''
       // 這招很厲害
       axios[method](url, { data: this.tempProduct })
         .then(res => {
