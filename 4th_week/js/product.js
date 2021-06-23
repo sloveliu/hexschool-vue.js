@@ -30,7 +30,7 @@ Vue.createApp({
   created() {
   },
   mounted() {
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).$)|^.*$/, "$1");
     if (!token) {
       window.location = './index.html';
       return;

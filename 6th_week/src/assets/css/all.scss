@@ -1,0 +1,7 @@
+// 所有樣式以這為起點
+// 載入自定義樣式
+@import '~bootstrap/scss/functions';
+@import './helpers/variables';
+@import '~bootstrap/scss/bootstrap';
+// 自行撰寫的css
+@import './custom/custom'
