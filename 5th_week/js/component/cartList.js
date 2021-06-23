@@ -1,7 +1,9 @@
 export default {
   template: `
   <div class="text-end">
-  <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">清空購物車</button>
+  <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts" :disabled="loadingStatus.deleteAllItem || cart.carts == 0">
+  <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.deleteAllItem"></i>清空購物車
+  </button>
   </div>
   <table class="table align-middle">
   <thead>
@@ -13,12 +15,12 @@ export default {
     </tr>
   </thead>
   <tbody>
-    <template v-if="cart.carts">
+    <template v-if="cart.carts !== undefined && cart.carts.length > 0">
       <tr v-for="item in cart.carts" :key="item.id">
         <td>
           <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)"
-            :disabled="loadingStatus.loadingItemID === item.id">
-            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItemID === item.id"></i>
+            :disabled="loadingStatus.deleteItemID === item.id">
+            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.deleteItemID === item.id"></i>
             刪除
           </button>
         </td>
@@ -31,8 +33,8 @@ export default {
         <td>
           <div class="input-group input-group-sm">
             <div class="input-group mb-3">
-              <input v-model.number="item.qty" @blur="updateCart(item)"
-                :disabled="loadingStatus.loadingItemID === item.id" min="1" type="number" class="form-control">
+              <input v-model.number="item.qty" @change="updateCart(item)"
+                :disabled="loadingStatus.deleteItemID === item.id" min="1" type="number" class="form-control">
               <span class="input-group-text" id="basic-addon2">{{ item.product.unit }}</span>
             </div>
           </div>
@@ -41,6 +43,11 @@ export default {
           <small v-if="cart.final_total !== cart.total" class="text-success">折扣價：</small>
           {{ item.final_total }}
         </td>
+      </tr>
+    </template>
+    <template v-else>
+      <tr>
+      <td colspan="6" class="text-center">趕快加入購物行列</td>
       </tr>
     </template>
   </tbody>
@@ -60,13 +67,14 @@ export default {
     return {
       cart: {},
       loadingStatus: {
-        loadingItemID: '',
+        deleteItemID: '',
+        deleteAllItem: false,
       }
     };
   },
   methods: {
     updateCart(item) {
-      this.loadingStatus.loadingItemID = item.id;
+      if (!this.validNum(item.qty)) return;
       const url = `${apiUrl}/api/${apiPath}/cart/${item.id}`;
       const cart = {
         product_id: item.product_id,
@@ -75,31 +83,42 @@ export default {
       axios.put(url, { data: cart }).then((res) => {
         if (res.data.success) this.getCart();
         alert(res.data.message);
-        this.loadingStatus.loadingItemID = '';
       }).catch(err => console.log(err.toString()));
     },
     deleteAllCarts() {
+      this.loadingStatus.deleteAllItem = true;
       const url = `${apiUrl}/api/${apiPath}/carts`;
       axios.delete(url).then((res) => {
         if (res.data.success) this.getCart();
         alert(res.data.message);
+        this.loadingStatus.deleteAllItem = false;
       }).catch(err => console.log(err.toString()));
     },
     getCart() {
       const url = `${apiUrl}/api/${apiPath}/cart`;
       axios.get(url).then((res) => {
-        if (res.data.success) this.cart = res.data.data;
+        if (res.data.success) {
+          this.cart = res.data.data;
+          emitter.emit('send-cart', this.cart.carts.length);
+        }
         else alert(res.data.message);
       }).catch(err => console.log(err.toString()));
     },
     removeCartItem(id) {
       const url = `${apiUrl}/api/${apiPath}/cart/${id}`;
-      this.loadingStatus.loadingItemID = id;
+      this.loadingStatus.deleteItemID = id;
       axios.delete(url).then((res) => {
         if (res.data.success) this.getCart();
-        this.loadingStatus.loadingItemID = '';
         alert(res.data.message);
+        this.loadingStatus.deleteItemID = '';
       }).catch(err => console.log(err.toString()));
+    },
+    validNum(num) {
+      if (!num || !/^[1-9]*[1-9][0-9]*$/.test(num)) {
+        alert("數量為整數且不得小於 1");
+        return false;
+      }
+      return true;
     },
   },
   created() {

@@ -28,7 +28,7 @@ export default {
                   <input type="number" class="form-control"
                         v-model.number="qty" min="1">
                   <button type="button" class="btn btn-primary"
-                          @click="addToCart(product.id, qty)">加入購物車</button>
+                          @click="addToCart(product.id, qty)" :disabled="!qty">加入購物車</button>
                 </div>
               </div>
             </div>
@@ -38,7 +38,6 @@ export default {
     </div>
   </div>
   `,
-  // 測試
   data() {
     return {
       product: {},
@@ -57,14 +56,29 @@ export default {
     });
   },
   methods: {
-    addToCart(id, qty) {
-      emitter.emit('add-to-cart', {id, qty});
+    addToCart(id, qty = 1) {
+      if (!this.validNum(qty)) return;
+      emitter.emit('add-to-cart', { id, qty });
+    },
+    validNum(num) {
+      if (!num || !/^[0-9]*[1-9][0-9]*$/.test(num)) {
+        alert("數量為整數且不得小於 1");
+        return false;
+      }
+      return true;
     },
     openModal() {
       this.productModal.show();
+      this.qty = 1;
     },
     closeModal() {
       this.productModal.hide();
     },
+  },
+  watch: {
+    qty(newValue, oldValue) {
+      if (!newValue || this.validNum(newValue)) this.qty = newValue;
+      else this.qty = oldValue;
+    }
   },
 };

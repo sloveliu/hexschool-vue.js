@@ -52,7 +52,9 @@ export default {
       <textarea name="" id="message" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
     </div>
     <div class="text-end">
-      <button type="submit" class="btn btn-danger">送出訂單</button>
+      <button type="submit" class="btn btn-danger" :disabled="this.carts == 0">
+      <i class="fas fa-spinner fa-pulse" v-if="submitStatus"></i>
+      送出訂單</button>
     </div>
   </v-form>
   </div>
@@ -68,6 +70,8 @@ export default {
         },
         message: '',
       },
+      carts: 0,
+      submitStatus: false
     };
   },
   components: {
@@ -77,6 +81,8 @@ export default {
   },
   methods: {
     createOrder() {
+      if (this.carts == 0) return alert("購物車是空的喔！")
+      this.submitStatus = true
       const url = `${apiUrl}/api/${apiPath}/order`;
       axios.post(url, { data: this.form })
         .then((res) => {
@@ -85,8 +91,12 @@ export default {
             this.form.message = '';
             emitter.emit('get-cart');
           }
+          this.submitStatus = false
           alert(res.data.message);
         }).catch(err => console.log(err.toString()));
     },
+  },
+  created() {
+    emitter.on('send-cart', (num) => this.carts = num);
   },
 };

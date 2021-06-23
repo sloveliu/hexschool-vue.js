@@ -27,13 +27,13 @@ export default {
       <td>
         <div class="btn-group btn-group-sm">
           <button type="button" class="btn btn-outline-secondary" @click="getProduct(item.id)"
-            :disabled="loadingStatus.loadingItemID === item.id || !item.is_enabled">
-            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItemID === item.id"></i>
+            :disabled="loadingStatus.moreID === item.id || !item.is_enabled">
+            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.moreID === item.id"></i>
             查看更多
           </button>
           <button type="button" class="btn btn-outline-danger" @click="addToCart(item.id)"
-            :disabled="loadingStatus.loadingItemID === item.id || !item.is_enabled">
-            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.loadingItemID === item.id"></i>
+            :disabled="loadingStatus.addToCartID === item.id || !item.is_enabled">
+            <i class="fas fa-spinner fa-pulse" v-if="loadingStatus.addToCartID === item.id"></i>
             加到購物車
           </button>
         </div>
@@ -47,7 +47,8 @@ export default {
       products: [],
       product: {},
       loadingStatus: {
-        loadingItemID: '', // 用來判斷點選該產品時，反灰及加載 Loading 圖
+        moreID: '', // 用來判斷點選該產品時，反灰及加載 Loading 圖
+        addToCartID: '', // 用來判斷點選該產品時，反灰及加載 Loading 圖
       },
     };
   },
@@ -62,29 +63,29 @@ export default {
     },
     getProduct(id) {
       const url = `${apiUrl}/api/${apiPath}/product/${id}`;
-      this.loadingStatus.loadingItemID = id;
+      this.loadingStatus.moreID = id;
       axios.get(url)
         .then((res) => {
           if (res.data.success) {
-            this.loadingStatus.loadingItemID = '';
             this.product = res.data.product;
             emitter.emit('get-product', this.product);
             this.$emit('openModal');
           } else alert(res.data.message);
+          this.loadingStatus.moreID = '';
         }).catch(err => console.log(err.toString()));
     },
     addToCart(id, qty = 1) {
       const url = `${apiUrl}/api/${apiPath}/cart`;
-      this.loadingStatus.loadingItemID = id;
+      this.loadingStatus.addToCartID = id;
       axios.post(url, { data: { product_id: id, qty } })
         .then((res) => {
           if (res.data.success) {
-            this.loadingStatus.loadingItemID = '';
             emitter.emit('get-cart');
           }
           this.$emit('closeModal');
           alert(res.data.message);
           emitter.emit('update-qty');
+          this.loadingStatus.addToCartID = '';
         }).catch(err => console.log(err.toString()));
     }
   },
